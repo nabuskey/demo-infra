@@ -1,0 +1,78 @@
+
+# Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+# SPDX-License-Identifier: MIT-0
+
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: sns.notification.jet.awsblueprints.io
+  labels:
+    awsblueprints.io/provider: aws-jet
+    awsblueprints.io/environment: dev
+    notification.awsblueprints.io/type: standard
+    notification.awsblueprints.io/sns-config: cloudwatch
+spec:
+  writeConnectionSecretsToNamespace: crossplane-system
+  compositeTypeRef:
+    apiVersion: awsblueprints.io/v1alpha1
+    kind: XNotification
+  patchSets:
+    - name: common-fields
+      patches:
+        - type: FromCompositeFieldPath
+          fromFieldPath: spec.resourceConfig.deletionPolicy
+          toFieldPath: spec.deletionPolicy
+        - type: FromCompositeFieldPath
+          fromFieldPath: spec.resourceConfig.region
+          toFieldPath: spec.forProvider.region
+        - type: FromCompositeFieldPath
+          fromFieldPath: spec.resourceConfig.jetProviderConfigName
+          toFieldPath: spec.providerConfigRef.name
+        - type: FromCompositeFieldPath
+          fromFieldPath: spec.resourceConfig.tags
+          toFieldPath: spec.forProvider.tags
+          policy:
+            mergeOptions:
+              appendSlice: true
+        - fromFieldPath: spec.writeConnectionSecretToRef.namespace
+          toFieldPath: spec.writeConnectionSecretToRef.namespace
+        - type: FromCompositeFieldPath
+          fromFieldPath: spec.resourceConfig.name
+          toFieldPath: metadata.annotations[crossplane.io/external-name]
+  resources:
+    - name: sns
+      base:
+        apiVersion: sns.aws.jet.crossplane.io/v1alpha1
+        kind: Topic
+        spec:
+          deletionPolicy: Delete
+          forProvider:
+            kmsMasterKeyId: alias/aws/sns
+      patches:
+        - type: PatchSet
+          patchSetName: common-fields
+        - fromFieldPath: "metadata.uid"
+          toFieldPath: "spec.writeConnectionSecretToRef.name"
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-sns-topic"
+        - type: FromCompositeFieldPath
+          fromFieldPath: metadata.name
+          toFieldPath: spec.forProvider.name
+        - type: FromCompositeFieldPath
+          fromFieldPath: spec.encryptionKey
+          toFieldPath: spec.forProvider.kmsMasterKeyId
+        - type: FromCompositeFieldPath
+          fromFieldPath: metadata.name
+          toFieldPath: spec.forProvider.displayName
+          transforms:
+            - type: string
+              string:
+                fmt: "managed by crossplane object %s"
+        - type: ToCompositeFieldPath
+          fromFieldPath: status.atProvider.arn
+          toFieldPath: status.topicArn
+        - type: ToCompositeFieldPath
+          fromFieldPath: status.atProvider.id
+          toFieldPath: status.topicId

@@ -1,0 +1,4 @@
+resources:
+  - definitions.yaml
+  - container.yaml
+  - zip.yaml

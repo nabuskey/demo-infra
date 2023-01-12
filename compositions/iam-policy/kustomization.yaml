@@ -1,0 +1,7 @@
+resources:
+  - definition.yaml
+  - kms-read.yaml
+  - s3-read.yaml
+  - s3-write.yaml
+  - sqs-read.yaml
+  - sqs-write.yaml
