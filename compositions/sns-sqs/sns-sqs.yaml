@@ -19,6 +19,12 @@ spec:
         - type: FromCompositeFieldPath
           fromFieldPath: spec.resourceConfig
           toFieldPath: spec.resourceConfig
+        - fromFieldPath: "metadata.name"
+          toFieldPath: "metadata.name"
+          transforms:
+            - type: string
+              string:
+                fmt: "sns-sqs-%s"
     - name: common-fields
       patches:
         - type: FromCompositeFieldPath
@@ -41,6 +47,12 @@ spec:
         - type: FromCompositeFieldPath
           fromFieldPath: spec.resourceConfig.name
           toFieldPath: metadata.annotations[crossplane.io/external-name]
+        - fromFieldPath: "metadata.name"
+          toFieldPath: "metadata.name"
+          transforms:
+            - type: string
+              string:
+                fmt: "sns-sqs-%s"
   resources:
     - name: sqs
       base:
