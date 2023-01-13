@@ -8,6 +8,7 @@ metadata:
   labels:
     awsblueprints.io/provider: aws-jet
     awsblueprints.io/environment: dev
+    awsblueprints.io/type: container
 spec:
   writeConnectionSecretsToNamespace: crossplane-system
   compositeTypeRef:

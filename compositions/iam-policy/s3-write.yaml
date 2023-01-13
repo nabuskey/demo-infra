@@ -83,7 +83,8 @@ spec:
                       "Action": [
                         "s3:GetObject",
                         "s3:PutObject",
-                        "s3:PutObjectAcl"
+                        "s3:PutObjectAcl",
+                        "s3:DeleteObject"
                       ],
                       "Resource": [
                         "%s/*"
@@ -92,7 +93,8 @@ spec:
                     {
                       "Effect": "Allow",
                       "Action": [
-                        "s3:ListBucket"
+                        "s3:ListBucket",
+                        "s3:GetBucketLocation"
                       ],
                       "Resource": [
                         "%s"
