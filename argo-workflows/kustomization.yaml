@@ -1,0 +1,6 @@
+resources:
+  - install.yaml
+  - ns.yaml
+namespace: argo
+patchesStrategicMerge:
+  - patch-argo-server-deployment.yaml
