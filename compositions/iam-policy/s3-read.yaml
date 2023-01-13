@@ -38,6 +38,12 @@ spec:
               appendSlice: true
         - fromFieldPath: spec.writeConnectionSecretToRef.namespace
           toFieldPath: spec.writeConnectionSecretToRef.namespace
+        - fromFieldPath: "metadata.name"
+          toFieldPath: "metadata.name"
+          transforms:
+            - type: string
+              string:
+                fmt: "policy-s3-read-%s"
   resources:
     - name: read-policy
       base:

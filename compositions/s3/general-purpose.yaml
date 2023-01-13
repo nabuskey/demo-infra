@@ -37,6 +37,12 @@ spec:
         - type: FromCompositeFieldPath
           fromFieldPath: spec.resourceConfig.name
           toFieldPath: metadata.annotations[crossplane.io/external-name]
+        - fromFieldPath: "metadata.name"
+          toFieldPath: "metadata.name"
+          transforms:
+            - type: string
+              string:
+                fmt: "bucket-%s"
   resources:
     - name: s3-bucket
       base:

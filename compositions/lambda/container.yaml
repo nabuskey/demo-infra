@@ -33,6 +33,12 @@ spec:
         - type: FromCompositeFieldPath
           fromFieldPath: spec.resourceConfig.name
           toFieldPath: metadata.annotations[crossplane.io/external-name]
+        - fromFieldPath: "metadata.name"
+          toFieldPath: "metadata.name"
+          transforms:
+            - type: string
+              string:
+                fmt: "function-%s"
   resources:
     - name: function
       base:
